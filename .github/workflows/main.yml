@@ -10,46 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
 
-      - name: Install Cordova
-        run: npm install -g cordova
+    - name: Install Cordova
+      run: npm install -g cordova
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
 
-      - name: Unzip Cordova Project
-        run: |
-          unzip FunTarget_Cordova_COMPLETE.zip
-          ls
+    - name: Unzip Cordova Project
+      run: unzip FunTarget_Cordova_COMPLETE.zip
 
-      - name: Verify Cordova Project
-        run: |
-          cd FunTarget_Cordova_COMPLETE
-          ls
-          test -f config.xml
+    - name: Verify Files
+      run: |
+        ls
+        ls www
+        ls res/screen/android
 
-      - name: Add Android Platform
-        run: |
-          cd FunTarget_Cordova_COMPLETE
-          cordova platform add android
+    - name: Add Android Platform
+      run: cordova platform add android
 
-      - name: Build Debug APK
-        run: |
-          cd FunTarget_Cordova_COMPLETE
-          cordova build android
+    - name: Build Debug APK
+      run: cordova build android
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: FunTarget-APK
-          path: FunTarget_Cordova_COMPLETE/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: FunTarget-APK
+        path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
