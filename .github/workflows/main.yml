@@ -3,13 +3,14 @@ name: Build Cordova APK
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repo
+    - name: Checkout
       uses: actions/checkout@v4
 
     - name: Setup Node
@@ -20,30 +21,19 @@ jobs:
     - name: Install Cordova
       run: npm install -g cordova
 
-    - name: Unzip Project
+    - name: Verify Project
       run: |
-        unzip FunTarget_Cordova_COMPLETE.zip
-        cd FunTarget_Cordova_COMPLETE
-        ls
-
-    - name: Verify Cordova Project
-      run: |
-        cd FunTarget_Cordova_COMPLETE
         ls
         test -f config.xml
 
     - name: Add Android Platform
-      run: |
-        cd FunTarget_Cordova_COMPLETE
-        cordova platform add android
+      run: cordova platform add android
 
     - name: Build Debug APK
-      run: |
-        cd FunTarget_Cordova_COMPLETE
-        cordova build android
+      run: cordova build android
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: FunTarget-APK
-        path: FunTarget_Cordova_COMPLETE/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+        name: app-debug
+        path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
