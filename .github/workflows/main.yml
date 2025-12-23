@@ -2,46 +2,48 @@ name: Build Cordova APK
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - name: Checkout Repo
+      uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+    - name: Install Cordova
+      run: npm install -g cordova
 
-      - name: Install Cordova
-        run: npm install -g cordova
+    - name: Unzip Project
+      run: |
+        unzip FunTarget_Cordova_COMPLETE.zip
+        cd FunTarget_Cordova_COMPLETE
+        ls
 
-      - name: Verify Cordova Project
-        run: |
-          ls
-          test -f config.xml
+    - name: Verify Cordova Project
+      run: |
+        cd FunTarget_Cordova_COMPLETE
+        ls
+        test -f config.xml
 
-      - name: Add Android Platform
-        run: |
-          cordova platform remove android || true
-          cordova platform add android
+    - name: Add Android Platform
+      run: |
+        cd FunTarget_Cordova_COMPLETE
+        cordova platform add android
 
-      - name: Build Debug APK
-        run: cordova build android --debug
+    - name: Build Debug APK
+      run: |
+        cd FunTarget_Cordova_COMPLETE
+        cordova build android
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: FunTarget-Debug-APK
-          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: FunTarget-APK
+        path: FunTarget_Cordova_COMPLETE/platforms/android/app/build/outputs/apk/debug/app-debug.apk
