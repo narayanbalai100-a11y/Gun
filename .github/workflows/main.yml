@@ -27,6 +27,11 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova
 
+      - name: Verify Cordova Project
+        run: |
+          ls
+          test -f config.xml
+
       - name: Add Android Platform
         run: |
           cordova platform remove android || true
